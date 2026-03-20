@@ -9,35 +9,35 @@ Este directorio contiene la propuesta inicial del sistema: pantallas diseñadas 
 A continuación se describen las pantallas principales de la aplicación. Las imágenes de los wireframes se encuentran en esta misma carpeta (`/propuesta`).
 
 ### 1. Pantalla de Login
-**Archivo:** `pantalla-login.png`
+![Login](assets/pantalla-login.png)
 
 Formulario de inicio de sesión con campos de correo electrónico y contraseña. Incluye un botón para registrarse como nuevo usuario. Es el punto de entrada a la aplicación.
 
 ---
 
 ### 2. Dashboard / Menú principal
-**Archivo:** `pantalla-dashboard.png`
+![Dashboard](assets/pantalla-dashboard.png)
 
 Pantalla principal del usuario autenticado. Muestra el nombre del usuario, su puntaje acumulado y las opciones disponibles: generar nuevo examen, ver historial de exámenes y administrar el banco de preguntas.
 
 ---
 
 ### 3. Generador de Examen
-**Archivo:** `pantalla-generador.png`
+![Generador](assets/pantalla-generador.png)
 
 El usuario selecciona el área de interés (por ejemplo: Historia, Matemáticas, Programación) y el número de preguntas deseadas. Al confirmar, se hace la llamada a la API de Google Gemini y se muestra el examen generado.
 
 ---
 
 ### 4. Resolución de Examen
-**Archivo:** `pantalla-examen.png`
+![Examen](assets/pantalla-examen.png)
 
 Muestra las preguntas una a una o en lista. El usuario selecciona sus respuestas y al finalizar se calcula y guarda su puntaje en la base de datos.
 
 ---
 
 ### 5. Administración de Preguntas
-**Archivo:** `pantalla-crud-preguntas.png`
+![CRUD Preguntas](assets/pantalla-crud-preguntas.png)
 
 Panel para gestionar el banco de preguntas. Permite crear, editar y eliminar preguntas manualmente, además de visualizar las generadas por la IA.
 
