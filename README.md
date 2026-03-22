@@ -68,6 +68,13 @@ npm install
 npm install prisma --save-dev
 npm install @prisma/client
 
+
+npx shadcn@latest init
+Te va a hacer varias preguntas. Contesta así:
+Select a component library › base
+Which preset would you like to use? › Nova
+
+
 # 3. Configurar variables de entorno
 cp .env.example .env.local
 npx prisma init --datasource-provider mongodb
