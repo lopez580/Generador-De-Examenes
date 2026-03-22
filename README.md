@@ -65,9 +65,12 @@ cd generador-examenes
 
 # 2. Instalar dependencias
 npm install
+npm install prisma --save-dev
+npm install @prisma/client
 
 # 3. Configurar variables de entorno
 cp .env.example .env.local
+npx prisma init --datasource-provider mongodb
 # Editar .env.local con tus credenciales
 
 # 4. Ejecutar en modo desarrollo

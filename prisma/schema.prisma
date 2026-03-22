@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma/client"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  nombre          String
+  correo          String    @unique
+  password        String
+  puntaje_total   Int       @default(0)
+  fecha_registro  DateTime  @default(now())
+  examenes        Examen[]
+}
+
+model Pregunta {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  texto            String
+  opciones         String[]
+  respuesta_correcta String
+  area             String
+  origen           String    @default("manual")
+  fecha_creacion   DateTime  @default(now())
+}
+
+model Examen {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  usuario_id        String    @db.ObjectId
+  usuario           Usuario   @relation(fields: [usuario_id], references: [id])
+  area              String
+  preguntas         String[]  @db.ObjectId
+  respuestas_usuario String[]
+  puntaje           Int       @default(0)
+  fecha             DateTime  @default(now())
+}

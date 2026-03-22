@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: generador-app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      MONGODB_URI: mongodb+srv://gl8598949_db_user:TU_PASSWORD@cluster0.enacsmu.mongodb.net/generador_examenes?retryWrites=true&w=majority&appName=Cluster0
