@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Zap, Clock, BookOpen, LogOut, FileText } from "lucide-react";
+import { Zap, Clock, BookOpen, LogOut, FileText, Trophy, ClipboardList } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const actividadReciente = [
@@ -13,13 +13,23 @@ const actividadReciente = [
 
 const acciones = [
     { label: "Generar Examen", descripcion: "Crea evaluaciones con IA en segundos", href: "/generar", icon: Zap },
-    { label: "Ver Historial", descripcion: "Revisa resultados y métricas anteriores", href: "/historial", icon: Clock },
-    { label: "Banco de Preguntas", descripcion: "Gestiona tu repositorio de reactivos", href: "/preguntas", icon: BookOpen },
+    { label: "Mis examenes", descripcion: "Ver mis examenes guardados", href: "/examenes", icon: ClipboardList },
+    { label: "Ranking", descripcion: "Ver y gestionar puntajes", href: "/ranking", icon: Trophy },
 ];
+
+interface Examen {
+    id: string;
+    area: string;
+    preguntas: string[];
+    puntaje: number;
+    fecha: string;
+    respuestas_usuario: string[];
+}
 
 export default function DashboardPage() {
     const router = useRouter();
     const [usuario, setUsuario] = useState<{ nombre: string; puntaje_total: number } | null>(null);
+    const [examenes, setExamenes] = useState<Examen[]>([]);
 
     useEffect(() => {
         const data = localStorage.getItem("usuario");
@@ -27,7 +37,11 @@ export default function DashboardPage() {
             router.push("/login");
             return;
         }
-        setUsuario(JSON.parse(data));
+        const user = JSON.parse(data);
+        setUsuario(user);
+        fetch(`/api/examenes/${user.id}`)
+            .then((r) => r.json())
+            .then((data) => setExamenes(data.slice(0, 3)));
     }, [router]);
 
     function handleLogout() {
@@ -88,39 +102,46 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Actividad reciente */}
-                <div>
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-sm font-semibold text-text-primary uppercase tracking-widest">
-                            Actividad reciente
-                        </h2>
-                        <button className="text-sm text-purple hover:text-purple-hover transition-colors">
-                            Ver todo →
-                        </button>
-                    </div>
-                    <div className="bg-surface border border-border-default rounded-lg divide-y divide-border-default">
-                        {actividadReciente.map((item, i) => (
-                            <div key={i} className="flex items-center justify-between px-6 py-4">
+                <div className="bg-surface border border-border-default rounded-lg divide-y divide-border-default">
+                    {examenes.length === 0 && (
+                        <div className="px-6 py-8 text-center text-text-muted text-sm">
+                            No hay actividad reciente
+                        </div>
+                    )}
+                    {examenes.map((examen) => {
+                        const resuelto = examen.respuestas_usuario.length > 0;
+                        const porcentaje = resuelto ? Math.round((examen.puntaje / examen.preguntas.length) * 100) : null;
+                        return (
+                            <div key={examen.id} className="flex items-center justify-between px-6 py-4">
                                 <div className="flex items-center gap-4">
                                     <div className="w-9 h-9 rounded-md bg-elevated flex items-center justify-center">
                                         <FileText size={16} className="text-text-muted" />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-text-primary">{item.titulo}</p>
-                                        <p className="text-xs text-text-muted">{item.tiempo}</p>
+                                        <p className="text-sm font-medium text-text-primary">{examen.area}</p>
+                                        <p className="text-xs text-text-muted">{new Date(examen.fecha).toLocaleDateString()}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-4">
-                                    <div className="text-right">
-                                        <p className="text-xs text-text-muted uppercase tracking-widest">Calificación</p>
-                                        <p className="text-sm font-semibold text-text-primary">{item.calificacion}/{item.total}</p>
-                                    </div>
-                                    <div className="w-12 h-12 rounded-full bg-elevated flex items-center justify-center text-sm font-bold text-purple border border-purple">
-                                        {item.porcentaje}%
-                                    </div>
+                                    {resuelto ? (
+                                        <>
+                                            <div className="text-right">
+                                                <p className="text-xs text-text-muted uppercase tracking-widest">Calificación</p>
+                                                <p className="text-sm font-semibold text-text-primary">{examen.puntaje}/{examen.preguntas.length}</p>
+                                            </div>
+                                            <div className="w-12 h-12 rounded-full bg-elevated flex items-center justify-center text-sm font-bold text-purple border border-purple">
+                                                {porcentaje}%
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <span className="text-xs bg-purple-alpha text-purple border border-purple/30 px-2 py-0.5 rounded-full">
+                                            Pendiente
+                                        </span>
+                                    )}
                                 </div>
                             </div>
-                        ))}
-                    </div>
+                        );
+                    })}
                 </div>
 
             </div>
