@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { verifyPassword } from "@/lib/password";
 import { NextResponse } from "next/server";
 
 // POST - Login
@@ -11,7 +12,7 @@ export async function POST(request: Request) {
             where: { correo }
         });
 
-        if (!usuario || usuario.password !== password) {
+        if (!usuario || !verifyPassword(password, usuario.password)) {
             return NextResponse.json({ error: "Credenciales incorrectas" }, { status: 401 });
         }
 

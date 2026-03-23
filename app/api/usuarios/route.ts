@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { hashPassword } from "@/lib/password";
 import { NextResponse } from "next/server";
 
 // GET - Listar todos los usuarios
@@ -18,8 +19,10 @@ export async function POST(request: Request) {
         console.log("Body recibido:", body);
         const { nombre, correo, password } = body;
 
+        const passwordHash = hashPassword(password);
+
         const usuario = await prisma.usuario.create({
-            data: { nombre, correo, password }
+            data: { nombre, correo, password: passwordHash }
         });
         console.log("Usuario creado:", usuario);
         return NextResponse.json(usuario, { status: 201 });
