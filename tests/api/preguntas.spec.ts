@@ -36,7 +36,9 @@ test.describe.serial('API — Preguntas', () => {
     });
 
     test('GET /api/preguntas/:id — devuelve 404 si el ID no existe', async ({ request }) => {
-        const res = await request.get('http://localhost:3000/api/preguntas/id-inexistente-000');
+        const idInexistente =
+            preguntaId.slice(0, -1) + (preguntaId.slice(-1) === 'a' ? 'b' : 'a');
+        const res = await request.get(`http://localhost:3000/api/preguntas/${idInexistente}`);
 
         expect(res.status()).toBe(404);
     });
