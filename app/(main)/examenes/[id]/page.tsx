@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { calcularPuntaje } from "@/lib/exam-utils";
 
 interface Pregunta {
     id: string;
@@ -56,7 +57,7 @@ export default function ResolverExamenPage({ params }: { params: Promise<{ id: s
     async function finalizar() {
         const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
         const respuestasArray = preguntas.map((_, i) => respuestas[i] || "");
-        const total = preguntas.reduce((acc, p, i) => acc + (respuestas[i] === p.respuesta_correcta ? 1 : 0), 0);
+        const total = calcularPuntaje(preguntas, respuestas);
 
         setPuntaje(total);
         setTerminado(true);

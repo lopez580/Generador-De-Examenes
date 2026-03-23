@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { useRouter } from "next/navigation";
+import { obtenerInfoDificultad } from "@/lib/exam-utils";
 import {
     Select,
     SelectContent,
@@ -18,22 +19,6 @@ const areas = [
     "Historia Universal", "Matemáticas", "Ciencias Naturales",
     "Física", "Química", "Literatura",
 ];
-
-const dificultades: Record<number, { label: string; tiempo: number }> = {
-    10: { label: "Fácil", tiempo: 20 },
-    20: { label: "Intermedia", tiempo: 45 },
-    30: { label: "Difícil", tiempo: 75 },
-    40: { label: "Avanzada", tiempo: 90 },
-    50: { label: "Experto", tiempo: 120 },
-};
-
-function getDificultad(cantidad: number) {
-    const keys = Object.keys(dificultades).map(Number).sort((a, b) => a - b);
-    const key = keys.reduce((prev, curr) =>
-        Math.abs(curr - cantidad) < Math.abs(prev - cantidad) ? curr : prev
-    );
-    return dificultades[key];
-}
 
 interface Pregunta {
     id?: string;
@@ -89,7 +74,7 @@ export default function GeneradorPage() {
         respuesta_correcta: "",
     });
 
-    const { label: dificultad, tiempo } = getDificultad(cantidad);
+    const { label: dificultad, tiempo } = obtenerInfoDificultad(cantidad);
 
     async function handleGenerar() {
         setGenerando(true);
