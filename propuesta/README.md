@@ -118,6 +118,7 @@ La API está construida con **Next.js API Routes** y expone los siguientes endpo
 | GET | `/api/preguntas` | Obtener todas las preguntas (filtrable por área) |
 | GET | `/api/preguntas/:id` | Obtener una pregunta por ID |
 | POST | `/api/preguntas` | Crear una nueva pregunta manualmente |
+| POST | `/api/preguntas/porids` | Obtener múltiples preguntas por una lista de IDs |
 | PUT | `/api/preguntas/:id` | Actualizar texto u opciones de una pregunta |
 | DELETE | `/api/preguntas/:id` | Eliminar una pregunta del banco |
 | POST | `/api/preguntas/generar` | Generar preguntas con Google Gemini y guardarlas |
@@ -142,8 +143,11 @@ La API está construida con **Next.js API Routes** y expone los siguientes endpo
 | Método | Ruta | Descripción |
 |--------|------|-------------|
 | POST | `/api/examenes` | Guardar resultado de un examen |
+| DELETE | `/api/examenes?id=:id` | Eliminar un examen por ID |
 | GET | `/api/examenes/:usuario_id` | Ver historial de exámenes de un usuario |
+| GET | `/api/examenes/detalle/:id` | Obtener detalle de un examen |
+| PUT | `/api/examenes/detalle/:id` | Actualizar respuestas y puntaje de un examen |
 
 ---
 
-> **Nota:** El login valida el correo y contraseña del usuario contra la base de datos. Si coinciden, se permite el acceso a la aplicación.
+> **Nota:** El login valida el correo y contraseña del usuario contra la base de datos. La contraseña se almacena con hash (`scrypt`) y se verifica al iniciar sesión.
