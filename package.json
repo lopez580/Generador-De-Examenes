@@ -8,6 +8,7 @@
     "start": "next start",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "test:unit": "playwright test tests/unit",
     "lint": "eslint"
   },
   "dependencies": {
