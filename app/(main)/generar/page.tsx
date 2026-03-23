@@ -266,11 +266,11 @@ export default function GeneradorPage() {
                     <div className="grid grid-cols-2 gap-3 mt-6">
                         <div className="bg-elevated border border-border-default rounded-lg p-3">
                             <p className="text-xs uppercase tracking-widest text-text-muted">Dificultad</p>
-                            <p className="text-base font-bold text-text-primary mt-1">{dificultad}</p>
+                            <p className="text-base font-bold mt-1">{dificultad}</p>
                         </div>
                         <div className="bg-elevated border border-border-default rounded-lg p-3">
                             <p className="text-xs uppercase tracking-widest text-text-muted">Tiempo est.</p>
-                            <p className="text-base font-bold text-text-primary mt-1">{tiempo} min</p>
+                            <p className="text-base font-bold mt-1">{tiempo} min</p>
                         </div>
                     </div>
                 </div>
