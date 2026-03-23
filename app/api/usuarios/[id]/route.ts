@@ -1,6 +1,23 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
+// GET - Obtener un usuario por ID
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+    try {
+        const { id } = await params;
+
+        const usuario = await prisma.usuario.findUnique({ where: { id } });
+
+        if (!usuario) {
+            return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 });
+        }
+
+        return NextResponse.json(usuario);
+    } catch (error) {
+        return NextResponse.json({ error: "Error al obtener usuario" }, { status: 500 });
+    }
+}
+
 // PUT - Actualizar usuario o puntaje
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
