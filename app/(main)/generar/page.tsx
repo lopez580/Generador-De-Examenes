@@ -203,7 +203,9 @@ export default function GeneradorPage() {
                     <div className="space-y-6">
                         <div className="space-y-2">
                             <p className="text-xs uppercase tracking-widest text-text-muted">Área del conocimiento</p>
-                            <Select value={area} onValueChange={setArea}>
+                            <Select value={area} onValueChange={(value) => {
+                                if (value) setArea(value)
+                            }}>
                                 <SelectTrigger className="w-full bg-elevated border-border-default text-text-primary">
                                     <SelectValue />
                                 </SelectTrigger>
