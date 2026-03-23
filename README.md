@@ -8,9 +8,10 @@ Aplicación web que permite generar exámenes personalizados usando inteligencia
 
 - Generación automática de preguntas y respuestas usando la API de **Google Gemini**
 - Banco de preguntas almacenado en base de datos (**MongoDB**)
-- API REST con CRUD completo de preguntas, respuestas y usuarios
-- Sistema de registro de puntajes por usuario
-- Autenticación con página de **Login**
+- API REST con CRUD completo de preguntas, usuarios y exámenes
+- Sistema de registro de puntajes por usuario y ranking
+- Autenticación con páginas de **Login** y **Registro**
+- Contraseñas almacenadas de forma segura con hash (`scrypt`)
 - Interfaz moderna construida con **Next.js**
 
 ---
@@ -22,8 +23,10 @@ Aplicación web que permite generar exámenes personalizados usando inteligencia
 | Frontend | Next.js (React) |
 | Backend / API | Next.js API Routes |
 | Base de datos | MongoDB |
+| ORM | Prisma |
 | IA generativa | Google Gemini API |
-| Autenticación | Validación de usuario y contraseña |
+| Autenticación | Validación de usuario y contraseña hasheada (`scrypt`) |
+| Pruebas | Playwright (E2E, API y unitarias) |
 
 ---
 
@@ -31,17 +34,17 @@ Aplicación web que permite generar exámenes personalizados usando inteligencia
 
 ```
 /
-├── app/                  # Páginas y rutas de Next.js
-│   ├── login/            # Página de inicio de sesión
-│   ├── dashboard/        # Panel principal del usuario
-│   └── examen/           # Generación y resolución de exámenes
+├── app/                  # Páginas, layouts y rutas API de Next.js
+│   ├── (auth)/           # Login y registro
+│   ├── (main)/           # Dashboard, generar, examenes, ranking
+│   └── api/              # Endpoints REST (CRUD)
 ├── components/           # Componentes reutilizables de UI
 ├── lib/                  # Conexión a BD y utilidades
-├── pages/api/            # Endpoints REST (CRUD)
-│   ├── preguntas/        # CRUD de preguntas y respuestas
-│   └── usuarios/         # CRUD de usuarios y puntajes
+├── prisma/               # Modelo de base de datos
+├── tests/                # Pruebas E2E, API y unitarias
 ├── propuesta/            # Pantallas, modelo de BD y propuesta de API
 │   └── README.md
+├── API.md                # Documentación detallada de endpoints
 ├── .env.example          # Variables de entorno necesarias
 └── README.md             # Este archivo
 ```
@@ -60,27 +63,20 @@ Aplicación web que permite generar exámenes personalizados usando inteligencia
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/generador-examenes.git
-cd generador-examenes
+git clone <url-del-repositorio>
+cd Generador-De-Examenes
 
 # 2. Instalar dependencias
 npm install
-npm install prisma --save-dev
-npm install @prisma/client
-
-
-npx shadcn@latest init
-Te va a hacer varias preguntas. Contesta así:
-Select a component library › base
-Which preset would you like to use? › Nova
-
 
 # 3. Configurar variables de entorno
-cp .env.example .env.local
-npx prisma init --datasource-provider mongodb
-# Editar .env.local con tus credenciales
+cp .env.example .env
+# Editar .env con tus credenciales
 
-# 4. Ejecutar en modo desarrollo
+# 4. Generar cliente de Prisma
+npx prisma generate
+
+# 5. Ejecutar en modo desarrollo
 npm run dev
 ```
 
@@ -89,8 +85,6 @@ npm run dev
 ```env
 DATABASE_URL=mongodb+srv://...
 GEMINI_API_KEY=...
-NEXTAUTH_SECRET=...
-NEXTAUTH_URL=http://localhost:3000
 ```
 
 ---
@@ -99,14 +93,41 @@ NEXTAUTH_URL=http://localhost:3000
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
-| GET | `/api/preguntas` | Listar preguntas |
+| GET | `/api/preguntas` | Listar preguntas (opcional `?area=`) |
+| GET | `/api/preguntas/:id` | Obtener una pregunta por ID |
 | POST | `/api/preguntas` | Crear pregunta |
+| POST | `/api/preguntas/generar` | Generar preguntas con Gemini |
+| POST | `/api/preguntas/porids` | Obtener preguntas por lista de IDs |
 | PUT | `/api/preguntas/:id` | Actualizar pregunta |
 | DELETE | `/api/preguntas/:id` | Eliminar pregunta |
 | GET | `/api/usuarios` | Listar usuarios |
-| POST | `/api/usuarios` | Crear usuario |
+| GET | `/api/usuarios/:id` | Obtener usuario por ID |
+| POST | `/api/usuarios` | Crear usuario (password hasheada) |
+| POST | `/api/usuarios/login` | Iniciar sesión |
 | PUT | `/api/usuarios/:id` | Actualizar usuario / puntaje |
 | DELETE | `/api/usuarios/:id` | Eliminar usuario |
+| POST | `/api/examenes` | Crear/guardar examen |
+| DELETE | `/api/examenes?id=...` | Eliminar examen |
+| GET | `/api/examenes/:usuario_id` | Historial de exámenes de un usuario |
+| GET | `/api/examenes/detalle/:id` | Obtener detalle de examen |
+| PUT | `/api/examenes/detalle/:id` | Actualizar respuestas y puntaje |
+
+> Documentación detallada y ejemplos `curl` en [`API.md`](./API.md).
+
+---
+
+## Pruebas
+
+```bash
+# E2E y API
+npm run test:e2e
+
+# UI de Playwright
+npm run test:e2e:ui
+
+# Unitarias
+npm run test:unit
+```
 
 ---
 
