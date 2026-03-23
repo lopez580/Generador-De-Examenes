@@ -15,28 +15,34 @@ Formulario de inicio de sesión con campos de correo electrónico y contraseña.
 
 ---
 
-### 2. Dashboard / Menú principal
+### 2. Pantalla de Registro
+
+Formulario para crear una nueva cuenta de usuario. Solicita nombre completo, correo electrónico y contraseña. Al registrarse exitosamente, el usuario es redirigido al login para iniciar sesión.
+
+---
+
+### 3. Dashboard / Menú principal
 ![Dashboard](assets/pantalla-dashboard.png)
 
 Pantalla principal del usuario autenticado. Muestra el nombre del usuario, su puntaje acumulado y las opciones disponibles: generar nuevo examen, ver historial de exámenes y administrar el banco de preguntas.
 
 ---
 
-### 3. Generador de Examen
+### 4. Generador de Examen
 ![Generador](assets/pantalla-generador.png)
 
 El usuario selecciona el área de interés (por ejemplo: Historia, Matemáticas, Programación) y el número de preguntas deseadas. Al confirmar, se hace la llamada a la API de Google Gemini y se muestra el examen generado.
 
 ---
 
-### 4. Resolución de Examen
+### 5. Resolución de Examen
 ![Examen](assets/pantalla-examen.png)
 
 Muestra las preguntas una a una o en lista. El usuario selecciona sus respuestas y al finalizar se calcula y guarda su puntaje en la base de datos.
 
 ---
 
-### 5. Administración de Preguntas
+### 6. Administración de Preguntas
 ![CRUD Preguntas](assets/pantalla-crud-preguntas.png)
 
 Panel para gestionar el banco de preguntas. Permite crear, editar y eliminar preguntas manualmente, además de visualizar las generadas por la IA.
