@@ -43,6 +43,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ message: `${guardadas.count} preguntas generadas`, count: guardadas.count }, { status: 201 });
     } catch (error) {
+        console.log("Error generar:", error);
         return NextResponse.json({ error: "Error al generar preguntas" }, { status: 500 });
     }
 }

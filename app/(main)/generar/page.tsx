@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Download, Printer, Zap, Pencil, Trash2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -46,6 +46,30 @@ interface Pregunta {
 
 export default function GeneradorPage() {
     const router = useRouter();
+    const [examenId, setExamenId] = useState<string | null>(null);
+
+    useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+        const id = searchParams.get("id");
+        if (!id) return;
+        setExamenId(id);
+
+        // Cargar examen existente
+        async function cargarExamen() {
+            const res = await fetch(`/api/examenes/detalle/${id}`);
+            const examen = await res.json();
+
+            const res2 = await fetch("/api/preguntas/porids", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ids: examen.preguntas })
+            });
+            const data = await res2.json();
+            setPreguntas(data);
+            setArea(examen.area);
+        }
+        cargarExamen();
+    }, []);
     const [area, setArea] = useState("Historia Universal");
     const [cantidad, setCantidad] = useState(20);
     const [usarIA, setUsarIA] = useState(true);
@@ -152,18 +176,26 @@ export default function GeneradorPage() {
                 }
             }
 
-            // Crear examen
-            await fetch("/api/examenes", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    usuario_id: usuario.id,
-                    area,
-                    preguntas: ids,
-                    respuestas_usuario: [],
-                    puntaje: 0
-                })
-            });
+            // Crear o actualizar examen
+            if (examenId) {
+                await fetch(`/api/examenes/detalle/${examenId}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ preguntas: ids, area })
+                });
+            } else {
+                await fetch("/api/examenes", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        usuario_id: usuario.id,
+                        area,
+                        preguntas: ids,
+                        respuestas_usuario: [],
+                        puntaje: 0
+                    })
+                });
+            }
 
             router.push("/examenes");
         } catch (error) {

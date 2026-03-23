@@ -7,9 +7,9 @@ import { cn } from "@/lib/utils"
 
 const navLinks = [
     { label: "Dashboard", href: "/dashboard" },
-    { label: "Preguntas", href: "/preguntas" },
+    { label: "Generar", href: "/generar" },
     { label: "Exámenes", href: "/examenes" },
-    { label: "Analytics", href: "/analytics" },
+    { label: "Ranking", href: "/ranking" },
 ]
 
 export default function Navbar() {

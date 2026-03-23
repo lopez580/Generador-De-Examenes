@@ -16,3 +16,17 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Error al guardar examen" }, { status: 500 });
     }
 }
+
+//DELETE
+export async function DELETE(request: Request) {
+    try {
+        const { searchParams } = new URL(request.url);
+        const id = searchParams.get("id");
+        if (!id) return NextResponse.json({ error: "Id requerido" }, { status: 400 });
+
+        await prisma.examen.delete({ where: { id } });
+        return NextResponse.json({ message: "Examen eliminado" });
+    } catch (error) {
+        return NextResponse.json({ error: "Error al eliminar" }, { status: 500 });
+    }
+}
