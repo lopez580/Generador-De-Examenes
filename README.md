@@ -1,6 +1,6 @@
 # Generador de Exámenes
 
-Aplicación web que permite generar exámenes personalizados usando inteligencia artificial. Los usuarios pueden seleccionar un área de interés y obtener preguntas y respuestas generadas automáticamente, guardarlas en una base de datos y llevar un registro de su puntaje.
+Aplicación web que permite generar exámenes personalizados usando inteligencia artificial y manualmente. Los usuarios pueden seleccionar un área de interés y obtener preguntas y respuestas generadas automáticamente, guardarlas en una base de datos y llevar un registro de su puntaje.
 
 ---
 
